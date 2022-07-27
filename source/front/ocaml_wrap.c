@@ -18,9 +18,9 @@
 // along with Teyjus.  If not, see <http://www.gnu.org/licenses/>.          //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "caml/mlvalues.h"
-#include "caml/callback.h"
-#include "caml/alloc.h"
+#include <caml/mlvalues.h>
+#include <caml/callback.h>
+#include <caml/alloc.h>
 
 
 void ocaml_simulator_main()

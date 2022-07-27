@@ -20,6 +20,7 @@ INC = $(dir include)
 
 OCAMLINCLUDES += $(CMP) $(DIS) $(SIM) $(LOD)
 OCAMLFLAGS= -w -A
+INCLUDES= $(split $(PATHSEP),$(CAML_LD_LIBRARY_PATH))
 CFLAGS += -g
 
 ############################################################
