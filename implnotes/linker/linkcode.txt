@@ -133,6 +133,11 @@
   {
     <entry index> --- [Constant index]
   }
+  [Exportdef Predicates Table]                       // NG
+  <number of exportdef predicates> --- 2 bytes
+  {
+    <entry index> --- [Constant index]
+  }
   <count of local constants> --- 2 bytes
   {
     <local constant index> --- [Constant index]

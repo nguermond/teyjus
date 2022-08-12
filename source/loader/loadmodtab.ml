@@ -139,47 +139,52 @@ let loadConstSymTab tySkeletonTab =
 (****************************************************************************)
 (*                       LOAD IMPORT TABLES                                 *)
 (****************************************************************************)
-
-(* TODO: This is wrong, need to look at linkcode.txt
- * but link bytecode does not keep track of exportdefs!
- *)
   
-(* let loadImportTab globalConsts =
- *   prerr_endline "Loading import tables...";
- *   let skipPredTab () =
- *     let numPreds = Bytecode.readTwoBytes () in
- *     prerr_endline(Format.sprintf "Skipping predicates: %d" numPreds);
- *     Bytecode.skipNBytes (3 * numPreds)
- *   in
- *   let skipSearchTab () =
- *     let numPreds = Bytecode.readTwoBytes () in
- *     prerr_endline(Format.sprintf "Skipping predicates: %d" numPreds);
- *     Bytecode.skipNBytes (numPreds * (Bytecode.getWordSize()))
- *   in
- *   let loadExpDefsTab () =
- *     let numPreds = Bytecode.readTwoBytes () in
- *     prerr_endline(Format.sprintf "Loading ExpDefs: %d" numPreds);
- *     List.iter (fun _ ->
- *         let readConstFn = (fun _ ind ->
- *             Array.get globalConsts (ind - Pervasive.numberPervasiveConstants)) in
- *         let const = Option.get @@ Bytecode.readConstantIndex readConstFn in
- *         prerr_endline (Format.sprintf "Loading exportdef constant: %s"
- *                          (Absyn.getConstantName const));
- *         let expdef = Absyn.getConstantExportDefRef const in
- *         expdef := true)
- *       (List.init numPreds (fun i -> ()))
- *   in
- *   (\* skip nonExpDefs *\)
- *   let _ = skipPredTab () in
- *   let _ = loadExpDefsTab () in
- *   (\* skip localDefs *\)
- *   let _ = skipPredTab () in
- *   let _ = Bytecode.skipNBytes 1 in
- *   skipSearchTab ()
- *   
- * let loadImportTabs globalConsts =
- *   let numImportTabs = Bytecode.readTwoBytes() in *)
+let loadImportTab globalConsts =
+  (* prerr_endline "Loading import tables..."; *)
+  let skipConstantTab () =
+    let numConsts = Bytecode.readTwoBytes () in
+    (* prerr_endline(Format.sprintf "Skipping constant table: %d" numConsts); *)
+    Bytecode.skipNBytes (3 * numConsts)
+  in
+  let loadExpDefsTab () =
+    let numPreds = Bytecode.readTwoBytes () in
+    prerr_endline(Format.sprintf "Loading ExpDefs: %d" numPreds);
+    List.iter (fun _ ->
+        let readConstFn = (fun cat ind ->
+            Array.get globalConsts ind) in
+        let const = Option.get @@ Bytecode.readConstantIndex readConstFn in
+        prerr_endline (Format.sprintf "Loading exportdef constant: %s"
+                         (Absyn.getConstantName const));
+        let useonly = Absyn.getConstantUseOnlyRef const in
+        useonly := true;
+        let nodefs = Absyn.getConstantNoDefsRef const in
+        nodefs := true
+      )
+      (List.init numPreds (fun i -> ()))
+  in
+  let skipSearchTab () =
+    let numPreds = Bytecode.readTwoBytes () in
+    (* prerr_endline(Format.sprintf "Skipping predicates: %d" numPreds); *)
+    Bytecode.skipNBytes ((3 + Bytecode.getWordSize()) * numPreds)
+  in
+  (* Skip number of code segments *)
+  let _ = Bytecode.skipNBytes 1 in
+  (* Skip next clause table *)
+  let _ = skipConstantTab () in
+  (* Read exportdef table *)
+  let _ = loadExpDefsTab () in
+  (* Skip local constant table *)
+  let _ = skipConstantTab () in
+  (* Skip find code function *)
+  let _ = Bytecode.skipNBytes 1 in
+  (* Skip search table *)
+  skipSearchTab ()
   
+let loadImportTabs globalConsts =
+  let numImportTabs = Bytecode.readTwoBytes() in
+  List.iter (fun _ -> loadImportTab globalConsts)
+    (List.init numImportTabs (fun i -> ()))
   
 (****************************************************************************)
 (*                       SKIP TABLES                                        *)
@@ -212,7 +217,11 @@ let skipHashTabs () =
   List.iter skipHashTab (List.init numHashTabs (fun i -> ()))
 
 let skipBVTabs () =
-  Bytecode.skipNBytes 2
+  let skipBV () =
+    Bytecode.skipNBytes(1 + (Bytecode.getWordSize()))
+  in
+  let numBVTabs = Bytecode.readTwoBytes() in
+  List.iter skipBV (List.init numBVTabs (fun i -> ()))
 
 
 (****************************************************************************)
@@ -233,8 +242,7 @@ let loadModuleTable modName =
   (* bv tables *)
   let _ = skipBVTabs() in
   (* import tables *)
-  (* TODO: loading exportdefs would require changing the linker bytecode! *)
-  (* let _ = loadImportTabs globalConsts in *)
+  let _ = loadImportTabs globalConsts in
   Bytecode.closeInChannel ();
   Absyn.Module(modName, [], [], ref constSymTab, ref kindSymTab, 
 			   Pervasive.pervasiveTypeAbbrevs, [], [], [], [], [], 

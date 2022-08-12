@@ -669,7 +669,3 @@ val setClauseBlockOffset : aclausesblock -> int -> unit
 (* if the given clause has a body as CutFailGoal, then set the second   *)
 (* field true and add an empty list as the clauses list                 *)
 val makeNewClauseBlock : aclause -> bool -> aclausesblock
-
-
-                                              
-val string_of_constant_type : aconstanttype -> string

@@ -60,7 +60,7 @@ MemPtr LD_LOADQ_heapEnd = NULL;
 // Assumes a pipe containing query code is already open
 void LD_LOADQ_LoadCompiledQuery()
 {
-  // LD_verbosity = 3;
+  LD_verbosity = 3;
   // set up a virtual GMT module
   MEM_GmtEnt ent;
 

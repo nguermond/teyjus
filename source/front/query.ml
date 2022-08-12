@@ -21,7 +21,7 @@
 
 let abortOnError () =
   if !Errormsg.anyErrors then
-    exit 1
+    raise Simerrors.Query
 
 (***************************************************************************)
 (*   parse a query and create relevant structures onto simulator heap      *)

@@ -373,6 +373,11 @@ void WriteNctEntry(int fd, void* entry)
   PutConstInd(fd,*(ConstInd*)entry);
 }
 
+void WriteExportDefPred(int fd, void* entry)
+{
+  PutConstInd(fd,*(ConstInd*)entry);
+}
+
 //Write out a single import table to file.
 void WriteImportTab(int fd, void* entry)
 {
@@ -382,6 +387,8 @@ void WriteImportTab(int fd, void* entry)
   
   LK_VECTOR_Write(fd,&(ImportTab->NextClauseTable),WriteNctEntry);
   
+  LK_VECTOR_Write(fd,&(ImportTab->ExportDefPreds),WriteExportDefPred);
+
   LK_VECTOR_Write(fd,&(ImportTab->LConstInds),WriteLocalConstant);
   
   LK_FILE_PUT1(fd,1);//FIND_CODE_FUNCTION

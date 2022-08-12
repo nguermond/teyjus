@@ -91,7 +91,17 @@ WordPtr LD_IMPORTTAB_LoadImportTab(MEM_GmtEnt* ent)
     cst=(int)LD_CONST_GetConstInd();
     MEM_impPutLT(tab,i,cst);
   }
-  
+
+  //Export Def table
+  int expdefSize=(int)LD_FILE_GET2();
+  LD_debug(" Export def table has %d entries\n",expdefSize);
+  for(i = 0; i< expdefSize; i++)
+  {
+	// We do not need to load exportdefs into the runtime memory
+	// It is only used by the compiler for handling queries
+	LD_CONST_GetConstInd();
+  }
+
   //Local Constant table
   lctSize=(int)LD_FILE_GET2();
   LD_debug(" Local constant table has %d entries\n",lctSize);
@@ -102,13 +112,13 @@ WordPtr LD_IMPORTTAB_LoadImportTab(MEM_GmtEnt* ent)
   // added by XQ
   LD_LOADER_ExtendModSpace(ent, lctSize);
   
-  //for(i=0;i<nctSize;i++) -- XQ
   for (i = 0; i < lctSize; i++)
   {
     cst=(int)LD_CONST_GetConstInd();
     MEM_impPutLCT(lcTab, i, cst);
   }
-  
+
+
   //Load FindCodeFunc
   fcf=LD_FILE_GET1();
   if(fcf==SEARCHTAB_FCF_SEQNSEARCH)
