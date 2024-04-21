@@ -151,8 +151,18 @@ let solveQueries () =
     (* enter interactive mode *)
     while true do   
       print_string ("[" ^ modName ^"] ?- ");
-      let query = read_line () in
-        solveQuery query  
+      let terminated str =
+        String.fold_left (fun (esc,term) chr ->
+            let term = term || ((not esc) && (chr = '.')) in
+            if (chr = '\"') then (not esc,term) else (esc,term))
+          (false,false) str |> snd
+      in
+      let query = ref (read_line ()) in
+      (* if line not terminated by period, enter more lines *)
+      while (not (terminated !query)) do
+        query := !query ^"\n"^ (read_line ());
+      done;
+      solveQuery !query
     done
   in
 

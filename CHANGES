@@ -6,6 +6,8 @@ Changes:
 * Fix indexing of nested implication points (see commit [2adba8a])
 * Rename absolute value symbol `abs` to `absv`
 * Add a generic build script (bin/teyjus)
+* Change the way local constants are printed (see commit 5364a08)
+* Allow multiline queries in REPL
 
 Bug fixes:
 * test/system_tests/implications now passes
