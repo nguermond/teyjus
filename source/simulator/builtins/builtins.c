@@ -31,6 +31,7 @@
 #include "evalexp.h"
 #include "compexp.h"
 #include "io.h"
+#include "uvar.h"
 #include "../mctypes.h"
 #include "../dataformats.h"
 #include "../printterm.h"
@@ -87,7 +88,9 @@ static void (*BI_branchTab[BI_TAB_SIZE])() =
     BIIO_getEnv,                  //BI_IO_GETENV
     BIIO_openSocket,              //BI_IO_OPEN_SOCKET
     BIIO_unixTime,                //BI_IO_UNIX_TIME
-    BIIO_system                   //BI_SYSTEM
+    BIIO_system,                  //BI_SYSTEM
+
+    BIUVAR_uvar                   //BI_UVAR
 };
 
 /* builtin index "register" */

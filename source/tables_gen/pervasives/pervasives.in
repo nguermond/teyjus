@@ -2,7 +2,7 @@
 
 /% section I: pervasive kinds        %/
    /% number of pervasive kinds      %/
-   KIND         7
+   KIND         8
    /% kind data table                %/
    /% index     name           index_name    arity    %/
       /* int */
@@ -18,15 +18,17 @@
       /* in_stream */
       5         in_stream      instream      0          ;;
       /* out_stream */
-      6         out_stream     outstream     0      
+      6         out_stream     outstream     0          ;;
+      /* dyn */
+      7         dyn            dyn          0
 
 /% section II: pervasive constants and their type skeletons %/
    /% section II.I : type skeletion and constant declarations %/
 
    /% number of pervasive constants %/
-   CONST                   94
+   CONST                   95
    /% number of type skeletons      %/
-   TYPE SKEL               42 
+   TYPE SKEL               44
 
    /% type skeleton and constant data table %/
    /% type skeleton format:                       
@@ -378,7 +380,21 @@
       /* string -> int -> o */
       TYPE      41     string -> int -> bool
        /* system predicate  */
-       52 system system 0 0 0 FALSE TRUE 0 NOFIXITY 37
+       52 system      system     0 0  0  FALSE  TRUE   0   NOFIXITY 37
+      ;;
+       
+      /* A -> dyn */
+      TYPE      42     #0 -> dyn
+       /* dync constructor */
+       94  `          dync        0 1  0  FALSE  FALSE   0   NOFIXITY NOCODE
+      ;;
+
+      /* A -> (list dyn) -> o */
+      TYPE      43      #0 -> (@ list 0 [dyn]) -> bool
+       /* uvar predicate */
+       53 uvar        uvar       1 1  1  FALSE  FALSE  0   NOFIXITY 38
+
+
 
    /% pervasive constant classification %/
    LOGIC SYMBOL 11
@@ -396,8 +412,8 @@
                 9        halt
                 10       stop
 			  	
-   PRED SYMBOL  37
-                PRED_START solve  PRED_END system
+   PRED SYMBOL  38
+                PRED_START solve  PRED_END uvar
              
    REGCL  solve not getenv strtoterm readterm read is lookahead input inputline
    

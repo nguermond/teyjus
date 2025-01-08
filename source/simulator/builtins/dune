@@ -3,4 +3,4 @@
  (libraries tables)
  (foreign_stubs
   (language c)
-  (names readterm builtins compexp evalexp io meta)))
+  (names readterm builtins compexp evalexp io meta uvar)))

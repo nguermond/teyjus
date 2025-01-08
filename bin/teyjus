@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -13,18 +13,18 @@ LINK=true
 QUERY=
 
 MAKEFILE=Makefile
-HELP="This script will automatically generate dependencies, compile,\n
-link, and optionally run teyjus programs.\n\n
-Usage: teyjus [-f -c -s -d -l -q -h] [file[.*]] [-b query]\n
-No Makefile must be present in the current directory\n
-f: fresh build\t\t-- clean before build\n
-c: clean directory\t-- clean *.lp *.lpo and *.dis\n
-s: simulate\t\t-- run tjsim\n
-d: disassemble\t\t-- run tjdis\n
-l: library only\t-- skip linking\n
-q: quiet\t\t\t-- suppress build output\n
-b: batch query\t\t-- run tjsim in batch mode on input query\n
-h: help\t\t\t-- output this text"
+HELP="This script will automatically generate dependencies, compile,
+link, and optionally run teyjus programs.\n
+Usage: teyjus [-f -c -s -d -l -q -h] [file[.*]] [-b query]
+No Makefile must be present in the current directory
+f: fresh build      -- clean before build
+c: clean directory  -- clean *.lp *.lpo and *.dis
+s: simulate         -- run tjsim
+d: disassemble      -- run tjdis
+l: library only     -- skip linking
+q: quiet            -- suppress build output
+b: batch query      -- run tjsim in batch mode on input query
+h: help             -- output this text"
 
 while getopts "fscdlqhb:" OPT; do
 	case $OPT in
@@ -48,7 +48,7 @@ while getopts "fscdlqhb:" OPT; do
             QUIETARG=--silent
 			;;
 		h)
-            echo -e $HELP
+            echo "$HELP"
 			exit 0
 			;;
         b)
@@ -58,7 +58,7 @@ while getopts "fscdlqhb:" OPT; do
             exit 0
             ;;
 		\?)
-            echo -e $HELP
+            echo "$HELP"
 			exit 1
 			;;
 	esac
@@ -90,7 +90,7 @@ while getopts "b:" OPT; do
             QUERY=$OPTARG
             ;;
 		\?)
-            echo -e $HELP
+            echo "$HELP"
 			exit 1
 			;;
 	esac

@@ -75,7 +75,8 @@ typedef enum
     BI_IO_GETENV      = 34,
     BI_IO_OPEN_SOCKET = 35,
     BI_UNIX_TIME      = 36,
-    BI_SYSTEM         = 37
+    BI_SYSTEM         = 37,
+    BI_UVAR           = 38
 } BI_BuiltinTabIndex;
 
 /*****************************************************************************/
